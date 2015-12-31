@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Arena Influences</title>
+        <title>Shelf</title>
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/1.2/base.min.css">
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/1.2/skeleton.min.css">
+        <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/1.2/skeleton.min.css"> -->
         <script src="http://code.angularjs.org/1.1.5/angular.min.js"></script>
         <script src="http://code.angularjs.org/1.1.5/angular-resource.min.js"></script>
         <script src="http://code.angularjs.org/1.1.5/angular-sanitize.min.js"></script>
@@ -36,14 +36,14 @@
 
                 <div class="sixteen columns">
                     <h4 ng-if="block.title" class="add-bottom">
-                        {{block.title}} 
+                        {{block.title}}
                         <span ng-if="block.class == 'Link'">
                             <a href="{{block.source.url}}" title="{{block.title}}">↳</a>
                         </span>
                         <span ng-if="block.class == 'Attachment'">
                             | <a href="{{block.source.url}}" title="{{block.title}}">Download</a>
                         </span>
-                    </h4> 
+                    </h4>
 
                     <div ng-if="block.class == 'Image'">
                         <figure>
@@ -78,7 +78,7 @@
         </div>
         <script type="text/javascript">
             var app = angular.module('arenaApp', ['ngResource', 'ngSanitize']);
-            app.controller('channelShow', function($scope, $resource) { 
+            app.controller('channelShow', function($scope, $resource) {
               var Channel = $resource('http://api.are.na/v2/channels/:slug');
               var channel = Channel.get({slug: 'arena-influences', sort: 'position', direction: 'asc'}, function(){
                 $scope.channel = channel;
