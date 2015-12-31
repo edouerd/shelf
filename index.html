@@ -17,7 +17,7 @@
             .channel{text-align:center; background:#e3e3e3; border:1px solid #ccc;}
         </style>
     </head>
-    <body ng-app="arenaApp">
+    <body ng-app="Shelf">
 
         <div class="container" ng-controller="channelShow">
 
@@ -77,10 +77,10 @@
             <!-- End Channel contents loop -->
         </div>
         <script type="text/javascript">
-            var app = angular.module('arenaApp', ['ngResource', 'ngSanitize']);
+            var app = angular.module('Shelf', ['ngResource', 'ngSanitize']);
             app.controller('channelShow', function($scope, $resource) {
               var Channel = $resource('http://api.are.na/v2/channels/:slug');
-              var channel = Channel.get({slug: 'pictures', sort: 'position', direction: 'asc'}, function(){
+              var channel = Channel.get({slug: 'picture', sort: 'position', direction: 'asc'}, function(){
                 $scope.channel = channel;
               });
             })
