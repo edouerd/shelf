@@ -1,96 +1,111 @@
 <!DOCTYPE html>
-    <html>
-    <head>
-        <!-- META -->
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        
-        <!-- TITLE -->
-        <title>Shelf</title>
-        
-        <!-- SCRIPTS -->
-        <script src="http://code.angularjs.org/1.1.5/angular.min.js"></script>
-        <script src="http://code.angularjs.org/1.1.5/angular-resource.min.js"></script>
-        <script src="http://code.angularjs.org/1.1.5/angular-sanitize.min.js"></script>
-        
-        <!-- STYLE -->
-        <style type="text/css" media="screen">
-            body {margin-top:40px;}
-            .header{text-align:center;}
-            .block{border-bottom:1px solid #eee;}
-            .channel{text-align:center; background:#e3e3e3; border:1px solid #ccc;}
-        </style>
-    </head>
-    
-    <body ng-app="Shelf">
+<html>
 
-        <div class="container" ng-controller="channelShow">
+	<head>
 
-            <div class="row">
-                <div class="sixteen columns add-bottom">
-                    <!--  This is the Title of the Channel I refer to on line 81 -->
-                    <h1 class="header">{{channel.title}}</h1>
-                </div>
+		<!-- META -->
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-                <div class="eight columns offset-by-four">
-                    <!--  This is the Description of the Channel I refer to on line 81 -->
-                    <p ng-if="channel.metadata.description">{{channel.metadata.description}}</p>
-                </div>
-            </div>
+		<!-- TITLE -->
+		<title>Shelf</title>
 
-            <!-- Channel contents loop -->
-            <div class="row add-bottom block" ng-repeat="block in channel.contents">
+		<!-- SCRIPTS -->
+		<script src="http://code.angularjs.org/1.1.5/angular.min.js"></script>
+		<script src="http://code.angularjs.org/1.1.5/angular-resource.min.js"></script>
+		<script src="http://code.angularjs.org/1.1.5/angular-sanitize.min.js"></script>
 
-                <div class="sixteen columns">
-                    <h4 ng-if="block.title" class="add-bottom">
-                        {{block.title}}
-                        <span ng-if="block.class == 'Link'">
-                            <a href="{{block.source.url}}" title="{{block.title}}">↳</a>
-                        </span>
-                        <span ng-if="block.class == 'Attachment'">
-                            | <a href="{{block.source.url}}" title="{{block.title}}">Download</a>
-                        </span>
-                    </h4>
+    <!-- SCRIPT: INTERACT W/ ARENA API -->
+    <script type="text/javascript">
+      var app = angular.module('Shelf', ['ngResource', 'ngSanitize']);
+      app.controller('channelShow', function($scope, $resource) {
+        var Channel = $resource('http://api.are.na/v2/channels/:slug');
+        var channel = Channel.get({slug: 'picture', sort: 'position', direction: 'asc'}, function(){
+          $scope.channel = channel;
+        });
+      })
+    </script>
 
-                    <div ng-if="block.class == 'Image'">
-                        <figure>
-                            <div class="seven columns add-bottom">
-                                <img src="{{block.image.display.url}}" alt="{{block.title}}" class="scale-with-grid">
-                            </div>
-                            <div class="seven columns">
-                                <figcaption ng-bind-html-unsafe="block.content_html"> </figcaption>
-                            </div>
-                        </figure>
-                    </div>
+		<!-- STYLE -->
+		<style type="text/css" media="screen">
+			body {margin-top:40px;}
+			.header{text-align:center;}
+			.block{border-bottom:1px solid #eee;}
+			.channel{text-align:center; background:#e3e3e3; border:1px solid #ccc;}
+		</style>
 
-                    <div ng-if="block.class == 'Attachment'">
-                        <img src="{{block.image.display.url}}" alt="{{block.title}}" class="scale-with-grid add-bottom">
-                    </div>
+	</head>
 
-                    <div ng-if="block.class == 'Text'" ng-bind-html-unsafe="block.content_html">
-                    </div>
+  <!-- APP STARTS -->
+	<body ng-app="Shelf">
 
-                    <div ng-if="block.class == 'Media'">
-                        <div ng-bind-html-unsafe="block.embed.html"></div>
-                        <figcaption ng-bind-html-unsafe="block.content_html"></figure>
-                    </div>
+    <!-- CHANNEL LOOP -->
+    <div class="container" ng-controller="channelShow">
 
-                    <div ng-if="block.class == 'Channel'">
-                        <h5 class="channel"><a href="#{{block.slug}}" title="">{{block.title}}</a></h5>
-                    </div>
-                </div>
+      <!-- CHANNEL TITLE + DESCRIPTION -->
+      <div class="row">
+        <!-- CHANNEL TITLE GRID -->
+  			<div class="sixteen columns add-bottom">
+					<!--	This is the Title of the Channel I refer to on line 81 -->
+					<h1 class="header">{{channel.title}}</h1>
+  			</div>
+        <!-- CHANNEL DESCRIPTION GRID -->
+  			<div class="eight columns offset-by-four">
+					<!--	This is the Description of the Channel I refer to on line 81 -->
+					<p ng-if="channel.metadata.description">{{channel.metadata.description}}</p>
+  			</div>
+			</div>
 
-            </div>
-            <!-- End Channel contents loop -->
-        </div>
-        <script type="text/javascript">
-            var app = angular.module('Shelf', ['ngResource', 'ngSanitize']);
-            app.controller('channelShow', function($scope, $resource) {
-              var Channel = $resource('http://api.are.na/v2/channels/:slug');
-              var channel = Channel.get({slug: 'picture', sort: 'position', direction: 'asc'}, function(){
-                $scope.channel = channel;
-              });
-            })
-       </script>
-    </body>
+			<!-- CHANNEL CONTENTS -->
+			<div class="row add-bottom block" ng-repeat="block in channel.contents">
+
+				<div class="sixteen columns">
+
+  				<h4 ng-if="block.title" class="add-bottom">
+  						{{block.title}}
+
+  					<span ng-if="block.class == 'Link'">
+							<a href="{{block.source.url}}" title="{{block.title}}">↳</a>
+  					</span>
+
+						<span ng-if="block.class == 'Attachment'">
+							| <a href="{{block.source.url}}" title="{{block.title}}">Download</a>
+						</span>
+  				</h4>
+
+					<div ng-if="block.class == 'Image'">
+						<figure>
+
+							<div class="seven columns add-bottom">
+								<img src="{{block.image.display.url}}" alt="{{block.title}}" class="scale-with-grid">
+							</div>
+
+							<div class="seven columns">
+								<figcaption ng-bind-html-unsafe="block.content_html"> </figcaption>
+							</div>
+						</figure>
+					</div>
+
+					<div ng-if="block.class == 'Attachment'">
+							<img src="{{block.image.display.url}}" alt="{{block.title}}" class="scale-with-grid add-bottom">
+					</div>
+
+			   <div ng-if="block.class == 'Text'" ng-bind-html-unsafe="block.content_html"></div>
+
+  				<div ng-if="block.class == 'Media'">
+  						<div ng-bind-html-unsafe="block.embed.html"></div>
+  						<figcaption ng-bind-html-unsafe="block.content_html"></figure>
+  				</div>
+
+					<div ng-if="block.class == 'Channel'">
+							<h5 class="channel"><a href="#{{block.slug}}" title="">{{block.title}}</a></h5>
+					</div>
+				</div>
+
+			</div>
+					<!-- End Channel contents loop -->
+			</div>
+
+	</body>
+
 </html>
